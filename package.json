@@ -1,0 +1,9 @@
+{
+  "name": "code-ya-ju",
+  "version": "2.0.0",
+  "description": "Robloxエクスプロイト用コード編集・共有サイト",
+  "type": "module",
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  }
+}
