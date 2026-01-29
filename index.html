@@ -257,6 +257,87 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-bottom: 1rem;
+        }
+
+        .paste-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-edit {
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+        }
+
+        .btn-edit:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-url {
+            background: var(--bg-primary);
+            color: var(--accent-secondary);
+            border: 1px solid var(--accent-secondary);
+        }
+
+        .btn-url:hover {
+            background: var(--accent-secondary);
+            color: var(--bg-primary);
+        }
+
+        .btn-delete {
+            background: var(--bg-primary);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+
+        .btn-delete:hover {
+            background: #ff4444;
+            color: var(--text-primary);
+        }
+
+        .paste-url-box {
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-secondary);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-top: 0.75rem;
+            display: none;
+        }
+
+        .paste-url-box.show {
+            display: block;
+        }
+
+        .paste-url-label {
+            color: var(--accent-secondary);
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .paste-url-value {
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            word-break: break-all;
+            background: var(--bg-secondary);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+        }
+
+        .paste-url-value:hover {
+            background: var(--bg-card);
         }
 
         .raw-page {
@@ -496,10 +577,30 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             }
 
             listContainer.innerHTML = pastes.map(paste => `
-                <div class="paste-item" onclick="viewPaste('${paste.id}')">
+                <div class="paste-item">
                     <div class="paste-title">${escapeHtml(paste.title)}</div>
                     <div class="paste-date">${formatDate(paste.date)}</div>
                     <div class="paste-preview">${escapeHtml(paste.preview)}...</div>
+                    <div class="paste-actions">
+                        <button class="btn btn-secondary btn-small btn-edit" onclick="editPaste('${paste.id}')">
+                            ✏️ 編集
+                        </button>
+                        <button class="btn btn-secondary btn-small btn-url" onclick="toggleUrl('${paste.id}')">
+                            🔗 URL表示
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="viewPaste('${paste.id}')">
+                            📄 表示
+                        </button>
+                        <button class="btn btn-secondary btn-small btn-delete" onclick="deletePaste('${paste.id}')">
+                            🗑️ 削除
+                        </button>
+                    </div>
+                    <div class="paste-url-box" id="url-${paste.id}">
+                        <div class="paste-url-label">📋 スクリプトURL</div>
+                        <div class="paste-url-value" onclick="copyText(this.textContent)">${window.location.origin}${window.location.pathname}?id=${paste.id}</div>
+                        <div class="paste-url-label">💻 Loadstring（エクスプロイト用）</div>
+                        <div class="paste-url-value" onclick="copyText(this.textContent)">loadstring(game:HttpGet("${window.location.origin}${window.location.pathname}?id=${paste.id}"))()</div>
+                    </div>
                 </div>
             `).join('');
         }
@@ -515,6 +616,50 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             // URLを更新（ブラウザの戻るボタン対応）
             history.pushState({ id: id }, '', `?id=${id}`);
             showRawPage(paste);
+        }
+
+        // スクリプトを編集
+        function editPaste(id) {
+            const paste = pastes.find(p => p.id === id);
+            if (!paste) {
+                alert('スクリプトが見つかりません');
+                return;
+            }
+
+            // 編集フォームにデータを読み込む
+            document.getElementById('scriptTitle').value = paste.title;
+            document.getElementById('scriptContent').value = paste.content;
+
+            // 新規作成タブに切り替え
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab')[0].classList.add('active');
+            document.getElementById('createTab').classList.add('active');
+
+            // スクロールして編集エリアを表示
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            alert('✏️ 編集モードに切り替えました！\n内容を編集して保存してください。');
+        }
+
+        // URL表示を切り替え
+        function toggleUrl(id) {
+            const urlBox = document.getElementById(`url-${id}`);
+            if (urlBox) {
+                urlBox.classList.toggle('show');
+            }
+        }
+
+        // スクリプトを削除
+        function deletePaste(id) {
+            if (!confirm('このスクリプトを削除しますか？\nこの操作は取り消せません。')) {
+                return;
+            }
+
+            pastes = pastes.filter(p => p.id !== id);
+            localStorage.setItem('robloxPastes', JSON.stringify(pastes));
+            loadPasteList();
+            alert('✅ 削除しました');
         }
 
         // RAWページ表示
