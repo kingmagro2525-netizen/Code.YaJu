@@ -185,6 +185,45 @@
             border-color: var(--accent-primary);
         }
 
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-edit {
+            background: var(--bg-primary);
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+        }
+
+        .btn-edit:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-url {
+            background: var(--bg-primary);
+            color: var(--accent-secondary);
+            border: 1px solid var(--accent-secondary);
+        }
+
+        .btn-url:hover {
+            background: var(--accent-secondary);
+            color: var(--bg-primary);
+        }
+
+        .btn-delete {
+            background: var(--bg-primary);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+
+        .btn-delete:hover {
+            background: #ff4444;
+            color: var(--text-primary);
+        }
+
         .url-display {
             background: var(--bg-secondary);
             border: 1px solid var(--accent-primary);
@@ -228,14 +267,12 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 1.5rem;
-            cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .paste-item:hover {
             background: var(--bg-card);
             border-color: var(--accent-primary);
-            transform: translateX(5px);
         }
 
         .paste-title {
@@ -264,45 +301,6 @@
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
-        }
-
-        .btn-small {
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .btn-edit {
-            background: var(--bg-primary);
-            color: var(--accent-primary);
-            border: 1px solid var(--accent-primary);
-        }
-
-        .btn-edit:hover {
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-        }
-
-        .btn-url {
-            background: var(--bg-primary);
-            color: var(--accent-secondary);
-            border: 1px solid var(--accent-secondary);
-        }
-
-        .btn-url:hover {
-            background: var(--accent-secondary);
-            color: var(--bg-primary);
-        }
-
-        .btn-delete {
-            background: var(--bg-primary);
-            color: #ff4444;
-            border: 1px solid #ff4444;
-        }
-
-        .btn-delete:hover {
-            background: #ff4444;
-            color: var(--text-primary);
         }
 
         .paste-url-box {
@@ -431,7 +429,6 @@
     </style>
 </head>
 <body>
-    <!-- メインページ -->
     <div id="mainPage">
         <div class="container">
             <header>
@@ -444,7 +441,6 @@
                 <div class="tab" onclick="switchTab('list')">📋 保存済み</div>
             </div>
 
-            <!-- 新規作成タブ -->
             <div id="createTab" class="tab-content active">
                 <div class="editor-section">
                     <div class="section-title">新しいスクリプトを作成</div>
@@ -469,7 +465,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
                 </div>
             </div>
 
-            <!-- 保存済みタブ -->
             <div id="listTab" class="tab-content">
                 <div class="editor-section">
                     <div class="section-title">保存済みスクリプト</div>
@@ -479,7 +474,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
         </div>
     </div>
 
-    <!-- RAWページ（個別のスクリプト表示） -->
     <div id="rawPage" class="raw-page">
         <div class="container">
             <div class="raw-header">
@@ -496,15 +490,12 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
     </div>
 
     <script>
-        // LocalStorageでスクリプトを管理
         let pastes = JSON.parse(localStorage.getItem('robloxPastes')) || [];
 
-        // ID生成
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
         }
 
-        // タブ切り替え
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -519,7 +510,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             }
         }
 
-        // スクリプト作成
         function createPaste() {
             const title = document.getElementById('scriptTitle').value.trim() || 'Untitled Script';
             const content = document.getElementById('scriptContent').value.trim();
@@ -541,7 +531,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             pastes.unshift(paste);
             localStorage.setItem('robloxPastes', JSON.stringify(pastes));
 
-            // URL生成
             const baseUrl = window.location.origin + window.location.pathname;
             const pasteUrl = `${baseUrl}?id=${id}`;
             const loadstringCode = `loadstring(game:HttpGet("${pasteUrl}"))()`;
@@ -550,19 +539,16 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             document.getElementById('loadstringCode').textContent = loadstringCode;
             document.getElementById('urlDisplay').classList.add('show');
 
-            // フォームをクリア
             document.getElementById('scriptTitle').value = '';
             document.getElementById('scriptContent').value = '';
         }
 
-        // フォームクリア
         function clearForm() {
             document.getElementById('scriptTitle').value = '';
             document.getElementById('scriptContent').value = '';
             document.getElementById('urlDisplay').classList.remove('show');
         }
 
-        // スクリプト一覧表示
         function loadPasteList() {
             const listContainer = document.getElementById('pasteList');
 
@@ -605,7 +591,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             `).join('');
         }
 
-        // スクリプト表示
         function viewPaste(id) {
             const paste = pastes.find(p => p.id === id);
             if (!paste) {
@@ -613,12 +598,10 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
                 return;
             }
 
-            // URLを更新（ブラウザの戻るボタン対応）
             history.pushState({ id: id }, '', `?id=${id}`);
             showRawPage(paste);
         }
 
-        // スクリプトを編集
         function editPaste(id) {
             const paste = pastes.find(p => p.id === id);
             if (!paste) {
@@ -626,23 +609,19 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
                 return;
             }
 
-            // 編集フォームにデータを読み込む
             document.getElementById('scriptTitle').value = paste.title;
             document.getElementById('scriptContent').value = paste.content;
 
-            // 新規作成タブに切り替え
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             document.querySelectorAll('.tab')[0].classList.add('active');
             document.getElementById('createTab').classList.add('active');
 
-            // スクロールして編集エリアを表示
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             alert('✏️ 編集モードに切り替えました！\n内容を編集して保存してください。');
         }
 
-        // URL表示を切り替え
         function toggleUrl(id) {
             const urlBox = document.getElementById(`url-${id}`);
             if (urlBox) {
@@ -650,7 +629,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             }
         }
 
-        // スクリプトを削除
         function deletePaste(id) {
             if (!confirm('このスクリプトを削除しますか？\nこの操作は取り消せません。')) {
                 return;
@@ -662,7 +640,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             alert('✅ 削除しました');
         }
 
-        // RAWページ表示
         function showRawPage(paste) {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('rawPage').classList.add('active');
@@ -670,25 +647,21 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             document.getElementById('rawPageContent').textContent = paste.content;
         }
 
-        // メインページに戻る
         function goBack() {
             history.pushState({}, '', window.location.pathname);
             document.getElementById('mainPage').style.display = 'block';
             document.getElementById('rawPage').classList.remove('active');
         }
 
-        // RAWコンテンツをコピー
         function copyRawContent() {
             const content = document.getElementById('rawPageContent').textContent;
             copyText(content);
         }
 
-        // テキストをコピー
         function copyText(text) {
             navigator.clipboard.writeText(text).then(() => {
                 alert('✅ コピーしました！');
             }).catch(() => {
-                // フォールバック
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 document.body.appendChild(textarea);
@@ -699,7 +672,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             });
         }
 
-        // 日付フォーマット
         function formatDate(isoString) {
             const date = new Date(isoString);
             return date.toLocaleString('ja-JP', {
@@ -711,14 +683,12 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             });
         }
 
-        // HTMLエスケープ
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
-        // ページ読み込み時の処理（URL直接アクセス対応）
         window.addEventListener('load', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
@@ -726,12 +696,9 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             if (id) {
                 const paste = pastes.find(p => p.id === id);
                 if (paste) {
-                    // RAWモードで表示
                     if (urlParams.get('raw') !== null || window.location.pathname.includes('/raw/')) {
-                        // プレーンテキストで出力（エクスプロイト用）
                         document.body.innerHTML = `<pre style="margin:0;padding:0;font-family:monospace;white-space:pre-wrap;">${escapeHtml(paste.content)}</pre>`;
                     } else {
-                        // 通常のRAWページ表示
                         showRawPage(paste);
                     }
                 } else {
@@ -741,7 +708,6 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             }
         });
 
-        // ブラウザの戻るボタン対応
         window.addEventListener('popstate', (event) => {
             if (event.state && event.state.id) {
                 const paste = pastes.find(p => p.id === event.state.id);
