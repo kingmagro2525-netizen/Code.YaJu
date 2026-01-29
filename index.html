@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RobloxPaste - Script Sharing</title>
+    <title>コード編集サイト-by YaJu</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -432,33 +432,29 @@
     <div id="mainPage">
         <div class="container">
             <header>
-                <div class="logo">RobloxPaste</div>
-                <div class="tagline">Delta / Xeno / Synapse X 対応スクリプト共有</div>
+                <div class="logo">コード編集サイト-by YaJu</div>
+                <div class="tagline">エクスプロイト用のコード編集サイト</div>
             </header>
 
             <div class="tabs">
-                <div class="tab active" onclick="switchTab('create')">✏️ 新規作成</div>
-                <div class="tab" onclick="switchTab('list')">📋 保存済み</div>
+                <div class="tab active" onclick="switchTab('create')">新規作成</div>
+                <div class="tab" onclick="switchTab('list')">保存済み</div>
             </div>
 
             <div id="createTab" class="tab-content active">
                 <div class="editor-section">
                     <div class="section-title">新しいスクリプトを作成</div>
-                    <input type="text" id="scriptTitle" placeholder="スクリプトのタイトル（例: Auto Farm）">
-                    <textarea id="scriptContent" placeholder="-- Roblox Lua Script
-
-game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
-
--- このスクリプトはDelta、Xeno、Synapse Xなどで実行できます"></textarea>
-                    <button class="btn btn-primary" onclick="createPaste()">🚀 保存してURLを生成</button>
-                    <button class="btn btn-secondary" onclick="clearForm()">🗑️ クリア</button>
+                    <input type="text" id="scriptTitle" placeholder="スクリプトのタイトル">
+                    <textarea id="scriptContent" placeholder="ここにスクリプトを入れて"></textarea>
+                    <button class="btn btn-primary" onclick="createPaste()">保存してURLを生成</button>
+                    <button class="btn btn-secondary" onclick="clearForm()">クリア</button>
 
                     <div id="urlDisplay" class="url-display">
-                        <div class="url-label">✅ 保存完了！以下のURLで共有できます：</div>
+                        <div class="url-label">保存完了！以下のURLで共有できます：</div>
                         <div class="url-text" onclick="copyText(this.textContent)" id="pasteUrl"></div>
                         
                         <div class="info-box">
-                            <div class="info-title">💡 Robloxエクスプロイトでの使い方</div>
+                            <div class="info-title">Robloxエクスプロイトでの使い方</div>
                             <div class="url-text" onclick="copyText(this.textContent)" id="loadstringCode"></div>
                         </div>
                     </div>
@@ -479,8 +475,8 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             <div class="raw-header">
                 <div class="raw-title-text" id="rawPageTitle"></div>
                 <div>
-                    <button class="btn btn-secondary" onclick="copyRawContent()">📋 コピー</button>
-                    <button class="btn btn-secondary" onclick="goBack()">🏠 戻る</button>
+                    <button class="btn btn-secondary" onclick="copyRawContent()">コピー</button>
+                    <button class="btn btn-secondary" onclick="goBack()">戻る</button>
                 </div>
             </div>
             <div class="raw-content-box">
@@ -569,20 +565,20 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
                     <div class="paste-preview">${escapeHtml(paste.preview)}...</div>
                     <div class="paste-actions">
                         <button class="btn btn-secondary btn-small btn-edit" onclick="editPaste('${paste.id}')">
-                            ✏️ 編集
+                            編集
                         </button>
                         <button class="btn btn-secondary btn-small btn-url" onclick="toggleUrl('${paste.id}')">
-                            🔗 URL表示
+                            URL表示
                         </button>
                         <button class="btn btn-secondary btn-small" onclick="viewPaste('${paste.id}')">
-                            📄 表示
+                            表示
                         </button>
                         <button class="btn btn-secondary btn-small btn-delete" onclick="deletePaste('${paste.id}')">
-                            🗑️ 削除
+                            削除
                         </button>
                     </div>
                     <div class="paste-url-box" id="url-${paste.id}">
-                        <div class="paste-url-label">📋 スクリプトURL</div>
+                        <div class="paste-url-label">スクリプトURL</div>
                         <div class="paste-url-value" onclick="copyText(this.textContent)">${window.location.origin}${window.location.pathname}?id=${paste.id}</div>
                         <div class="paste-url-label">💻 Loadstring（エクスプロイト用）</div>
                         <div class="paste-url-value" onclick="copyText(this.textContent)">loadstring(game:HttpGet("${window.location.origin}${window.location.pathname}?id=${paste.id}"))()</div>
@@ -619,7 +615,7 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            alert('✏️ 編集モードに切り替えました！\n内容を編集して保存してください。');
+            alert('編集モードに切り替えました！\n内容を編集して保存してください。');
         }
 
         function toggleUrl(id) {
@@ -637,7 +633,7 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
             pastes = pastes.filter(p => p.id !== id);
             localStorage.setItem('robloxPastes', JSON.stringify(pastes));
             loadPasteList();
-            alert('✅ 削除しました');
+            alert('削除しました');
         }
 
         function showRawPage(paste) {
@@ -660,7 +656,7 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
 
         function copyText(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('✅ コピーしました！');
+                alert('コピーしました！');
             }).catch(() => {
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
@@ -668,7 +664,7 @@ game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                alert('✅ コピーしました！');
+                alert('コピーしました！');
             });
         }
 
