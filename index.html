@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RobloxPaste - Script Sharing</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #151932;
+            --bg-card: #1a1f3a;
+            --accent-primary: #00ff9f;
+            --accent-secondary: #00d4ff;
+            --text-primary: #e8eaed;
+            --text-secondary: #9ca3af;
+            --border: rgba(0, 255, 159, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 159, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 0.75rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary);
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .editor-section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 159, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 400px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 159, 0.1);
+        }
+
+        .btn {
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            margin-right: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 255, 159, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-primary);
+        }
+
+        .url-display {
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .url-display.show {
+            display: block;
+        }
+
+        .url-label {
+            color: var(--accent-secondary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .url-text {
+            color: var(--text-primary);
+            word-break: break-all;
+            background: var(--bg-primary);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .url-text:hover {
+            background: var(--bg-secondary);
+        }
+
+        .paste-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .paste-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .paste-item:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        .paste-title {
+            font-weight: 700;
+            color: var(--accent-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .paste-date {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .paste-preview {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .raw-page {
+            display: none;
+            min-height: 100vh;
+            background: var(--bg-primary);
+            padding: 2rem;
+        }
+
+        .raw-page.active {
+            display: block;
+        }
+
+        .raw-header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .raw-title-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .raw-content-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .raw-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--accent-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-title {
+            color: var(--accent-secondary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+            }
+
+            textarea {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- メインページ -->
+    <div id="mainPage">
+        <div class="container">
+            <header>
+                <div class="logo">RobloxPaste</div>
+                <div class="tagline">Delta / Xeno / Synapse X 対応スクリプト共有</div>
+            </header>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('create')">✏️ 新規作成</div>
+                <div class="tab" onclick="switchTab('list')">📋 保存済み</div>
+            </div>
+
+            <!-- 新規作成タブ -->
+            <div id="createTab" class="tab-content active">
+                <div class="editor-section">
+                    <div class="section-title">新しいスクリプトを作成</div>
+                    <input type="text" id="scriptTitle" placeholder="スクリプトのタイトル（例: Auto Farm）">
+                    <textarea id="scriptContent" placeholder="-- Roblox Lua Script
+
+game:GetService('Players').LocalPlayer:Kick('Hello from RobloxPaste!')
+
+-- このスクリプトはDelta、Xeno、Synapse Xなどで実行できます"></textarea>
+                    <button class="btn btn-primary" onclick="createPaste()">🚀 保存してURLを生成</button>
+                    <button class="btn btn-secondary" onclick="clearForm()">🗑️ クリア</button>
+
+                    <div id="urlDisplay" class="url-display">
+                        <div class="url-label">✅ 保存完了！以下のURLで共有できます：</div>
+                        <div class="url-text" onclick="copyText(this.textContent)" id="pasteUrl"></div>
+                        
+                        <div class="info-box">
+                            <div class="info-title">💡 Robloxエクスプロイトでの使い方</div>
+                            <div class="url-text" onclick="copyText(this.textContent)" id="loadstringCode"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 保存済みタブ -->
+            <div id="listTab" class="tab-content">
+                <div class="editor-section">
+                    <div class="section-title">保存済みスクリプト</div>
+                    <div id="pasteList" class="paste-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RAWページ（個別のスクリプト表示） -->
+    <div id="rawPage" class="raw-page">
+        <div class="container">
+            <div class="raw-header">
+                <div class="raw-title-text" id="rawPageTitle"></div>
+                <div>
+                    <button class="btn btn-secondary" onclick="copyRawContent()">📋 コピー</button>
+                    <button class="btn btn-secondary" onclick="goBack()">🏠 戻る</button>
+                </div>
+            </div>
+            <div class="raw-content-box">
+                <pre class="raw-code" id="rawPageContent"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LocalStorageでスクリプトを管理
+        let pastes = JSON.parse(localStorage.getItem('robloxPastes')) || [];
+
+        // ID生成
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
+        }
+
+        // タブ切り替え
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            
+            if (tabName === 'create') {
+                document.getElementById('createTab').classList.add('active');
+            } else {
+                document.getElementById('listTab').classList.add('active');
+                loadPasteList();
+            }
+        }
+
+        // スクリプト作成
+        function createPaste() {
+            const title = document.getElementById('scriptTitle').value.trim() || 'Untitled Script';
+            const content = document.getElementById('scriptContent').value.trim();
+
+            if (!content) {
+                alert('スクリプトを入力してください！');
+                return;
+            }
+
+            const id = generateId();
+            const paste = {
+                id: id,
+                title: title,
+                content: content,
+                date: new Date().toISOString(),
+                preview: content.substring(0, 100)
+            };
+
+            pastes.unshift(paste);
+            localStorage.setItem('robloxPastes', JSON.stringify(pastes));
+
+            // URL生成
+            const baseUrl = window.location.origin + window.location.pathname;
+            const pasteUrl = `${baseUrl}?id=${id}`;
+            const loadstringCode = `loadstring(game:HttpGet("${pasteUrl}"))()`;
+
+            document.getElementById('pasteUrl').textContent = pasteUrl;
+            document.getElementById('loadstringCode').textContent = loadstringCode;
+            document.getElementById('urlDisplay').classList.add('show');
+
+            // フォームをクリア
+            document.getElementById('scriptTitle').value = '';
+            document.getElementById('scriptContent').value = '';
+        }
+
+        // フォームクリア
+        function clearForm() {
+            document.getElementById('scriptTitle').value = '';
+            document.getElementById('scriptContent').value = '';
+            document.getElementById('urlDisplay').classList.remove('show');
+        }
+
+        // スクリプト一覧表示
+        function loadPasteList() {
+            const listContainer = document.getElementById('pasteList');
+
+            if (pastes.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📜</div>
+                        <div>まだ保存されたスクリプトがありません</div>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = pastes.map(paste => `
+                <div class="paste-item" onclick="viewPaste('${paste.id}')">
+                    <div class="paste-title">${escapeHtml(paste.title)}</div>
+                    <div class="paste-date">${formatDate(paste.date)}</div>
+                    <div class="paste-preview">${escapeHtml(paste.preview)}...</div>
+                </div>
+            `).join('');
+        }
+
+        // スクリプト表示
+        function viewPaste(id) {
+            const paste = pastes.find(p => p.id === id);
+            if (!paste) {
+                alert('スクリプトが見つかりません');
+                return;
+            }
+
+            // URLを更新（ブラウザの戻るボタン対応）
+            history.pushState({ id: id }, '', `?id=${id}`);
+            showRawPage(paste);
+        }
+
+        // RAWページ表示
+        function showRawPage(paste) {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('rawPage').classList.add('active');
+            document.getElementById('rawPageTitle').textContent = paste.title;
+            document.getElementById('rawPageContent').textContent = paste.content;
+        }
+
+        // メインページに戻る
+        function goBack() {
+            history.pushState({}, '', window.location.pathname);
+            document.getElementById('mainPage').style.display = 'block';
+            document.getElementById('rawPage').classList.remove('active');
+        }
+
+        // RAWコンテンツをコピー
+        function copyRawContent() {
+            const content = document.getElementById('rawPageContent').textContent;
+            copyText(content);
+        }
+
+        // テキストをコピー
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ コピーしました！');
+            }).catch(() => {
+                // フォールバック
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('✅ コピーしました！');
+            });
+        }
+
+        // 日付フォーマット
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // HTMLエスケープ
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ページ読み込み時の処理（URL直接アクセス対応）
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                const paste = pastes.find(p => p.id === id);
+                if (paste) {
+                    // RAWモードで表示
+                    if (urlParams.get('raw') !== null || window.location.pathname.includes('/raw/')) {
+                        // プレーンテキストで出力（エクスプロイト用）
+                        document.body.innerHTML = `<pre style="margin:0;padding:0;font-family:monospace;white-space:pre-wrap;">${escapeHtml(paste.content)}</pre>`;
+                    } else {
+                        // 通常のRAWページ表示
+                        showRawPage(paste);
+                    }
+                } else {
+                    alert('スクリプトが見つかりません');
+                    goBack();
+                }
+            }
+        });
+
+        // ブラウザの戻るボタン対応
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.id) {
+                const paste = pastes.find(p => p.id === event.state.id);
+                if (paste) {
+                    showRawPage(paste);
+                }
+            } else {
+                goBack();
+            }
+        });
+    </script>
+</body>
+</html>
